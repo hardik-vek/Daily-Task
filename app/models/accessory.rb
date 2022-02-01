@@ -2,11 +2,10 @@ class Accessory < ApplicationRecord
   validates :name, presence: true
   validates :description, presence: true
 
-#   attr_accessor :name
+  #   attr_accessor :name
 
   validates_length_of :name, maximum: 6
-
-  before_validation :remove_whitespaces, :normalize_name, on: :create
+  before_validation :remove_whitespaces, on: :create #, :normalize_name
 
   private
 
@@ -15,6 +14,9 @@ class Accessory < ApplicationRecord
   end
 
   after_validation :normalize_description, on: [:create, :update]
+  # before_create_commit :normalize_name
+  after_create_commit :normalize_name
+  # after_create_rollback :normalize_name
 
   before_create do
     puts "object initilazed"
@@ -36,9 +38,9 @@ class Accessory < ApplicationRecord
     puts "object not destroyed"
   end
 
-#   around_destroy do
-#     puts "object jdhdjhdh destroyed"
-#   end
+  #   around_destroy do
+  #     puts "object jdhdjhdh destroyed"
+  #   end
 
   after_destroy do
     puts "object destroyed"
@@ -52,7 +54,7 @@ class Accessory < ApplicationRecord
     puts "object is saved"
   end
 
-  after_initialize do |user|
+  after_initialize do
     puts "you have initialized an object"
   end
 
@@ -63,6 +65,7 @@ class Accessory < ApplicationRecord
   after_touch do |user|
     puts "you have touched an object"
   end
+
   private
 
   def normalize_name
